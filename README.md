@@ -10,10 +10,17 @@ This system combines Microsoft's OmniParser for UI element detection with LLM-ba
 
 ### Phase 1 Implementation (Complete)
 
-**Nielsen's Heuristics H1-H3 Mapped**
+**Nielsen's Heuristics H1-H10 Mapped**
 - H1: Visibility of System Status
 - H2: Match Between System and Real World
 - H3: User Control and Freedom
+- H4: Consistency and Standards
+- H5: Error Prevention
+- H6: Recognition Rather Than Recall
+- H7: Flexibility and Efficiency of Use
+- H8: Aesthetic and Minimalist Design
+- H9: Help Users Recognize, Diagnose, and Recover from Errors
+- H10: Help and Documentation
 
 **UI Element Detection Pipeline**
 - OmniParser integration for detecting UI components
@@ -207,6 +214,34 @@ displayEvaluationResults(result.data);
 - **H3.2**: Clear navigation exit points (weight: 10)
 - **H3.3**: Confirmation for destructive actions (weight: 10)
 
+### H4: Consistency and Standards
+- **H4.1**: Internal consistency of UI elements
+- **H4.2**: Following platform conventions
+
+### H5: Error Prevention
+- **H5.1**: Avoiding error-prone conditions
+- **H5.2**: Confirmation before risky actions
+
+### H6: Recognition Rather Than Recall
+- **H6.1**: Visible instructions and objects
+- **H6.2**: Context-sensitive help
+
+### H7: Flexibility and Efficiency of Use
+- **H7.1**: Accelerators for expert users
+- **H7.2**: Personalization of frequent actions
+
+### H8: Aesthetic and Minimalist Design
+- **H8.1**: Removal of irrelevant information
+- **H8.2**: High signal-to-noise ratio
+
+### H9: Help Users Recognize, Diagnose, and Recover from Errors
+- **H9.1**: Plain language error messages
+- **H9.2**: Precise indication of problems
+
+### H10: Help and Documentation
+- **H10.1**: Easy to search documentation
+- **H10.2**: Concrete steps for tasks
+
 ## Scoring Algorithm
 
 Each heuristic is scored 0-100 based on:
@@ -221,9 +256,14 @@ H1 Score = 100 - (H1.2_violations * 10 + H1.1_violations * 8)
 
 ## Future Enhancements (Phases 2-4)
 
-- **Phase 2**: Complete H4-H10 implementation
-- **Phase 3**: PDF/JSON report generation, dataset benchmarking
-- **Phase 4**: Full RUXAILAB UI integration, deployment
+- **Phase 2: Automated System Discovery & Inventory Builder**
+  - Web crawling engine for full-site mapping
+  - Automated detection of mandatory pages
+  - Template fingerprinting and inventory
+- **Phase 3: Advanced Reporting & Benchmarking**
+  - PDF/JSON report generation
+  - Dataset benchmarking
+- **Phase 4: Full RUXAILAB UI integration, deployment
 
 ## Environment Configuration
 
