@@ -217,18 +217,20 @@ For each violation found, provide:
 - affected_elements: List of element content/text affected
 - recommendation: Specific actionable recommendation to fix
 
-Respond with a JSON array of violations. If no violations found, return empty array [].
+Respond with a JSON object with a "violations" key containing an array of violations. If no violations are found, use an empty array.
 
 Example response format:
-[
-  {{
-    "criterion_id": "H1.2",
-    "severity": "major",
-    "description": "Submit button lacks visible feedback state",
-    "affected_elements": ["Submit"],
-    "recommendation": "Add hover and active states to provide visual feedback"
-  }}
-]
+{{
+  "violations": [
+    {{
+      "criterion_id": "H1.2",
+      "severity": "major",
+      "description": "Submit button lacks visible feedback state",
+      "affected_elements": ["Submit"],
+      "recommendation": "Add hover and active states to provide visual feedback"
+    }}
+  ]
+}}
 
 Violations:"""
 
@@ -251,28 +253,49 @@ You have access to "Relevant examples and best practices" above (from the RAG Kn
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.3,
-                response_format={"type": "json_object"}
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "heuristic_evaluation",
+                        "strict": True,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "violations": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "criterion_id": {"type": "string"},
+                                            "severity": {
+                                                "type": "string",
+                                                "enum": ["critical", "major", "minor", "cosmetic"]
+                                            },
+                                            "description": {"type": "string"},
+                                            "recommendation": {"type": "string"},
+                                            "affected_elements": {
+                                                "type": "array",
+                                                "items": {"type": "string"}
+                                            }
+                                        },
+                                        "required": ["criterion_id", "severity", "description", "recommendation", "affected_elements"],
+                                        "additionalProperties": False
+                                    }
+                                }
+                            },
+                            "required": ["violations"],
+                            "additionalProperties": False
+                        }
+                    }
+                }
             )
 
             # Parse response
             content = response.choices[0].message.content
             self.logger.debug(f"LLM response for {heuristic_id.value}: {content}")
             
-            # Try to extract JSON array from response
             parsed = json.loads(content)
-            
-            # Handle different response formats
-            violations_data = parsed
-            if isinstance(parsed, dict):
-                # If wrapped in object, try common keys
-                for key in ['violations', 'results', 'findings', 'issues']:
-                    if key in parsed:
-                        violations_data = parsed[key]
-                        break
-            
-            if not isinstance(violations_data, list):
-                self.logger.warning(f"LLM response not a list: {violations_data}")
-                return []
+            violations_data = parsed["violations"]
 
             # Convert to HeuristicViolation objects
             violations = []
